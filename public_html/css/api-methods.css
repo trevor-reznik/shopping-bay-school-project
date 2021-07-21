@@ -1,0 +1,154 @@
+/*
+ * Name: Christian P. Byrne
+ * Course: CSC337 | Summer 2021
+ * Description: Stylesheet for the PA9 API methods demo of the Ostaa shopping web app.
+ * 				Applying configuration value in conjunction with the mini framework in 
+ * 				the windows95-theme global stylesheet.
+ * 
+ */
+
+/* Main Grid */
+body {
+  display: grid;
+  grid:
+    "input output" minmax(max-content, 100%)
+    / min-content 1fr;
+}
+body > div {
+  --elevation: 3;
+}
+
+/* API Methods Column */
+body > div:nth-of-type(1) {
+  grid-area: input;
+  display: grid;
+  grid-template-columns: max-content;
+  grid-template-rows: min-content;
+}
+
+body > div:nth-of-type(1) > div {
+  --elevation: 5;
+  cursor: pointer;
+}
+div > b {
+  --elevation: 4;
+  --primary-font: var(--shell-font);
+  --lightness-offset: 50%;
+  --selected-color: var(--secondary);
+  filter: brightness(1.6);
+}
+
+form {
+  --elevation: 2;
+}
+label {
+  --elevation: 2.5;
+}
+input {
+  --elevation: 3.5;
+}
+button:hover {
+  --elevation: 2.5;
+}
+
+/* Toggle Visibility / Collapse Method */
+label,
+input,
+button,
+form {
+  display: none;
+}
+.active label,
+.active input,
+.active button {
+  display: block;
+  text-align: center;
+  --primary-font: CascadiaCode-Light;
+}
+.active form {
+  display: grid;
+  grid-template-columns: repeat(2, min-content);
+  grid-template-rows: min-content;
+}
+
+/* Output Column */
+body > div:nth-of-type(2) {
+  grid-area: output;
+}
+body > div:nth-of-type(2) p {
+  --elevation: 1;
+}
+
+header {
+  --elevation: 2;
+}
+
+button#clear {
+  position: absolute;
+  display: block;
+  z-index: 999;
+  right: 2vw;
+  top: 2vw;
+}
+
+/*
+ * ─── JSON VIEWER MODULE ─────────────────────────────────────────────────────────
+ */
+  
+/* Root element */
+.json-document {
+  padding: 1em 2em;
+}
+
+/* Syntax highlighting for JSON objects */
+ul.json-dict, ol.json-array {
+  list-style-type: none;
+  margin: 0 0 0 1px;
+  border-left: 1px dotted #ccc;
+  padding-left: 2em;
+}
+.json-string {
+  color: #0B7500;
+}
+.json-literal {
+  color: #1A01CC;
+  font-weight: bold;
+}
+
+/* Toggle button */
+a.json-toggle {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+}
+a.json-toggle:focus {
+  outline: none;
+}
+a.json-toggle:before {
+  font-size: 1.1em;
+  color: #c0c0c0;
+  content: "\25BC"; /* down arrow */
+  position: absolute;
+  display: inline-block;
+  width: 1em;
+  text-align: center;
+  line-height: 1em;
+  left: -1.2em;
+}
+a.json-toggle:hover:before {
+  color: #aaa;
+}
+a.json-toggle.collapsed:before {
+  /* Use rotated down arrow, prevents right arrow appearing smaller than down arrow in some browsers */
+  transform: rotate(-90deg);
+}
+
+/* Collapsable placeholder links */
+a.json-placeholder {
+  color: #aaa;
+  padding: 0 1em;
+  text-decoration: none;
+}
+a.json-placeholder:hover {
+  text-decoration: underline;
+}

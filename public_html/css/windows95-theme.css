@@ -1,0 +1,183 @@
+/*
+ * ─── WINDOWS 95 MINI CSS FRAMEWORK ──────────────────────────────────────────────
+ *
+ * ∥ USAGE:
+ * 		› Set --elevation: number;
+ * 		› Set --selected-color: var(--primary); | var(--secondary);
+ * 			default is primary.
+ * 		› To customize other values, you have to change the variable definitions;
+ * 			you can't just change the properties per usual. 
+ * 		› To fully customize/reset a node, append a :not(element) to the global wildcard
+ * 			selector at the start of the framework. Or, apply the framework individually to nodes.
+ * 
+ * ∥ ASSETS:
+ * 		Font, Icons, and Windows95 Wallpaper from CDN: 
+ * 		https://trevor-reznik.github.io/guides/windows95-css-framework/bymyself-fonts.css
+ * 
+ * ∥ FROM: 
+ * 		Christian P. Byrne
+ * 		June 2021
+ * 
+ */
+
+:root {
+  /* Colors */
+  --dark: hsla(0deg, 0%, 7%, 0.68);
+  --light: hsl(0deg, 0%, 97%);
+  --primary: 0deg, 0%, 76%;
+  --secondary: 240deg, 100%, 35%;
+  --selected-color: var(--primary);
+  /* Surface Colors */
+  --bg-color: linear-gradient(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)),
+    linear-gradient(#ffffff, #ffffff);
+  --surface-color: linear-gradient(
+      rgba(255, 255, 255, 0.02),
+      rgba(255, 255, 255, 0.02)
+    ),
+    linear-gradient(rgba(192, 192, 192, 0.999), rgba(192, 192, 192, 0.999));
+  --outline-width: 1px;
+  --outline-color: #000000;
+  --outline-offset: -2px;
+  --inset-outline: inset var(--outline-color) 1px;
+  --inset-outline-offset: -2px;
+  --caption-outline: groove var(--outline-color) 1px;
+  --caption-outline-offset: -1px;
+  --interactive-border: 1px groove black;
+  /* Typeface */
+  --primary-font: windows-stock;
+  --secondary-font: font-windows;
+  --shell-font: CascadiaCode-SemiBold;
+  --pixel-font: font-Retroville-NC;
+  --text-contrast: 0deg, 0%, 7%;
+}
+
+body {
+  background: var(--bg-color);
+}
+
+/* ─── GLOBAL SELECTOR ──────────────────────────── */
+body *:not(input[type="range"]):not(header):not(h6):not(span):not(header *):not(pre):not(pre *) {
+  /** Typeface **/
+  -webkit-font-smoothing: antialiased;
+  font-family: var(--primary-font);
+  font-size: max(min(calc(0.25em * var(--elevation)), max(2.5vw, 8px)), 1rem);
+  font-weight: min(max(calc(800 - (300 * var(--elevation))), 200), 600);
+  letter-spacing: calc(1.5px - calc(1px * (var(--elevation) / 6)));
+  color: hsla(var(--text-contrast), calc(0.6 + var(--elevation) * 0.1));
+  text-decoration: none;
+
+  /** Borders and Outlines **/
+  outline: ridge var(--outline-color) var(--outline-width);
+  outline-offset: var(--outline-offset);
+  border-radius: min(0.25em, 0.75rem);
+  margin: min(calc(3em / var(--elevation)), max(1.5vh, 1.325vw));
+  padding: max(min(calc(0.1rem * var(--elevation)), max(3vh, 3vw)), 2px);
+  box-sizing: border-box;
+  border: none;
+
+  /** Shadows **/
+  --shadow: hsla(
+    0deg,
+    0%,
+    7%,
+    max(min(calc(var(--elevation) * 0.075), 0.18), 0.02)
+  );
+  --blur: max(0.5rem, min(calc(2rem / var(--elevation)), 2.5rem));
+  box-shadow: 0 0 var(--blur) var(--shadow);
+
+  /** Surface Colors **/
+  background-image: linear-gradient(
+      hsla(var(--selected-color), calc(var(--elevation) / 8)),
+      hsla(var(--selected-color), calc(var(--elevation) / 8))
+    ),
+    linear-gradient(var(--light), var(--light));
+
+  /** Animations **/
+  transition: all 0.6s linear 0s;
+}
+
+/** Psuedo **/
+body *:hover {
+  filter: brightness(calc(1 - var(--elevation) * 0.0085));
+  transition: all 0s linear 0s;
+}
+
+/* ─── INTERACTIVE ELEMENTS ───────────────────────── */
+button,
+input[type="button"],
+input[type="submit"] {
+  --elevation: 3.75;
+  filter: brightness(1.05);
+  --selected-color: var(--secondary);
+  cursor: pointer;
+  --text-contrast: 0deg, 0%, 100%;
+  --light: hsl(var(--secondary));
+  text-transform: uppercase;
+  --primary-font: CascadiaCode-SemiLight;
+  text-align: center;
+}
+
+label,
+caption,
+input[type="button"],
+input[type="submit"] {
+  --primary-font: CascadiaCode-Light;
+  text-align: center;
+}
+input[type="text"]:hover {
+  cursor: text;
+}
+input {
+  --primary-font: CascadiaCode-ExtraLight;
+}
+
+/* ─── TOOLBAR ───────────────────────────────── 
+ * 
+ * Format:
+ * 
+ * <h6> Title </h6>
+ * <div>
+ *		<span class="minimize-icon"></span>
+ *		<span class="unmaximize-icon"></span>
+ *		<span class="close-icon"></span> 
+ * </div>
+ * 
+ */
+header {
+  font-size: max(
+    min(calc(0.175em * var(--elevation)), max(2.25vw, 5px)),
+    0.7rem
+  );
+  margin: -0.125em;
+  color: var(--light);
+  padding: 0.25ch 0.25ch 1.5ch 1.5ch;
+  background: hsl(var(--secondary));
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  outline: var(--caption-outline);
+  outline-offset: var(--caption-outline-offset);
+}
+
+header > h6 {
+  font-size: max(
+    min(calc(0.175em * var(--elevation)), max(2.25vw, 5px)),
+    0.7rem
+  );
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  width: max-content;
+}
+
+header > div {
+  display: flex;
+  align-items: flex-end;
+  width: min-content;
+}
+
+header span {
+  cursor: pointer;
+  height: 1.5em;
+  width: 1.5em;
+}
