@@ -78,7 +78,7 @@ interface ExpressServer {
 // ────────────────────────────────────────────────────────────────────────────────
 
 class EbayDatabase {
-  constructor(verboseMsg: (msgPrinter : any) => void) {
+  constructor(verboseMsg: (msgPrinter: any) => void) {
     // This should be generalized with parameters.
     this.itemSchema = new Schema<Item>({
       title: String,
@@ -244,22 +244,6 @@ const ostaa = () => {
       });
     res.end();
   });
-  http.server.get("/register", (req: Request, res: Response) => {
-    db.mutations.create
-      .user({
-        username: req.body.username,
-        password: req.body.password,
-      })
-      .then(() => {
-        console.log("user created.");
-      })
-      .catch((reason: any) => {
-        SPACER("User create resolver error.");
-        console.log(reason);
-      });
-    res.end();
-  });
-
   http.server.get("/get/users", (req, res: Response) => {
     db.queries.findAll.user().then((value: User[]) => {
       res.json(value);
@@ -274,19 +258,21 @@ const ostaa = () => {
   http.server.get(
     "/get/:collection/:username",
     (req: Request, res: Response) => {
-      db.queries.findOne.user(req.params.username).then((value: User | null) => {
-        if (value) {
-          if (req.params.collection == "listings") {
-            res.send(value.listings);
+      db.queries.findOne
+        .user(req.params.username)
+        .then((value: User | null) => {
+          if (value) {
+            if (req.params.collection == "listings") {
+              res.send(value.listings);
+            }
+            if (req.params.collection == "purchases") {
+              res.send(value.purchases);
+            }
+          } else {
+            SPACER("Cannot find user.");
+            res.send("Cannot find user.");
           }
-          if (req.params.collection == "purchases") {
-            res.send(value.purchases);
-          }
-        } else {
-          SPACER("Cannot find user.");
-          res.send("Cannot find user.");
-        }
-      });
+        });
     }
   );
 
@@ -328,15 +314,59 @@ const ostaa = () => {
     }
   );
 
-  http.server.get("/login", (req: Request, res: Response) => {
+  /**
+   * Response = (Boolean) true if successull user creation, else false
+   * or null if error occurred or user already exists.
+   */
+  http.server.post("/register", (req: Request, res: Response) => {
+    // Check if username/password combo already exists in database.
+    db.queries.findAll.user().then((users: User[]) => {
+      let alreadyExist = users.filter(
+        (usr: User) =>
+          usr.username === req.body.username &&
+          usr.password === req.body.password
+      );
+      if (alreadyExist.length > 0) {
+        res.send(false);
+      } else {
+      }
+      // If user doesn't already exist, create new user.
+      db.mutations.create
+        .user({
+          username: req.body.username,
+          password: req.body.password,
+        })
+        .then(() => {
+          if (!__prod__) {
+            SPACER(
+              `User Created - Username: ${req.body.username}  Password: ${req.body.password}`
+            );
+          }
+          res.send(true);
+        })
+        .catch((reason: any) => {
+          SPACER("Create-User resolver error.");
+          console.log(reason);
+          res.end();
+        });
+    });
+  });
+
+  /**
+   * Response: (Boolean) true if successul login, false if user doesn't exist. 
+   * 
+   */
+  http.server.post("/login", (req: Request, res: Response) => {
     db.queries.findAll.user().then((users: User[]) => {
       if (!__prod__) {
-        SPACER(`Query: ${req.query}`);
+        SPACER(
+          `Credentials attempted - Username : ${req.body.username} Password ${req.body.password}`
+        );
       }
       let matches: User[] | null = users.filter(
         (usr) =>
-          usr.username == req.query.username &&
-          usr.password == req.query.password
+          usr.username == req.body.username &&
+          usr.password == req.body.password
       );
       if (matches.length > 0) {
         res.send(true);
@@ -353,6 +383,5 @@ const ostaa = () => {
     }
   });
 };
-
 
 ostaa();

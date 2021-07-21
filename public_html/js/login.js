@@ -1,10 +1,10 @@
 /**
- * Event listeners and template constructor for login page of ostaa 
+ * Event listeners and template constructor for login page of ostaa
  * shopping app pa10.
  * @author Christian P. Byrne
  */
 
-import { TemplateEngine, BASE_URL, renderPage } from "./index.js";
+import { TemplateEngine, BASE_URL, ENV, renderPage } from "./index.js";
 
 function loginHandlers() {
   const outputField = document.querySelector("body > div:nth-of-type(3)");
@@ -15,14 +15,28 @@ function loginHandlers() {
       let entryType = target.parentElement.id;
       $.ajax({
         url: `${BASE_URL}/${entryType}/`,
-        type: "GET",
+        type: "POST",
         data: $(`#${entryType}`).serializeArray(),
         success: function (response) {
           if (!response) {
-            outputField.innerHTML = "Invalid credentials";
+            let errorMsg;
+            if (entryType == "register") {
+              if (response === false) {
+                errorMsg = "Username-Password combination already exists D: ";
+              } else if (response === null) {
+                errorMsg = "Server Error while creating user document.";
+              }
+            } else if (entryType == "login") {
+              errorMsg = "Incorrect username-password.";
+            }
+            outputField.innerHTML = errorMsg;
           } else {
             sessionStorage.setItem("login", mutation);
-            renderPage("home");
+            if (ENV === "api-demo") {
+              renderPage("api");
+            } else if (ENV === "production") {
+              renderPage("home");
+            }
           }
         },
       });

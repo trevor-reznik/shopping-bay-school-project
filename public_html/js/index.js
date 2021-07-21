@@ -9,6 +9,7 @@ import { apiRender, apiHandlers } from "./api.js";
 import { loginRender, loginHandlers } from "./login.js";
 import { homeRender, homeHandlers } from "./home.js";
 const BASE_URL = "http://127.0.0.1:5000";
+const ENV = "api-demo"
 
 /**
  * Create the dynamic stylesheet link node that is altered
@@ -23,13 +24,16 @@ window.onload = () => {
   dynamicStyle.data = "dynamic";
   document.querySelector("head").appendChild(dynamicStyle);
   if (sessionStorage.getItem("login")) {
-    renderPage("home")
+    if (ENV === "api-demo") {
+      renderPage("api")
+    }
+    if (ENV === "production") {
+      renderPage("home")  
+    }
+    // for Production:
   }
   else {
-    // for PA9: 
-    renderPage("api")
-    // for PA10:
-    // renderPage("login")
+    renderPage("login")
   }
 };
 
@@ -375,4 +379,4 @@ class TemplateEngine {
   };
 }
 
-export { TemplateEngine, BASE_URL, renderPage };
+export { TemplateEngine, BASE_URL, ENV, renderPage };

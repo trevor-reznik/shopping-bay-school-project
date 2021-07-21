@@ -55,7 +55,10 @@ function apiHandlers() {
           $("#json-viewer").jsonViewer(response);
         });
       } else {
-        // POST form data. On success, query the new record and display.
+        // POST form data | Create Item or Create User.
+        // On success, query the new record and display in Json Viewer Node.
+        // Too lazy to make it work on create items, because the search functio nuses
+        // the descriptoin field instead of name.
         let mutation = target.parentElement.querySelectorAll("input")[0].value;
         let entryType = target.parentElement.id;
         $.ajax({
