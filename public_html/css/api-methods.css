@@ -7,35 +7,16 @@
  * 
  */
 
-/* Main Grid */
-body {
-  display: grid;
-  grid:
-    "input output" minmax(max-content, 100%)
-    / min-content 1fr;
-}
-body > div {
-  --elevation: 3;
-}
-
-/* API Methods Column */
-body > div:nth-of-type(1) {
-  grid-area: input;
+/* Left - API Methods Column */
+#left {
   display: grid;
   grid-template-columns: max-content;
   grid-template-rows: min-content;
 }
 
-body > div:nth-of-type(1) > div {
+#left > div {
   --elevation: 5;
   cursor: pointer;
-}
-div > b {
-  --elevation: 4;
-  --primary-font: var(--shell-font);
-  --lightness-offset: 50%;
-  --selected-color: var(--secondary);
-  filter: brightness(1.6);
 }
 
 form {
@@ -47,8 +28,18 @@ label {
 input {
   --elevation: 3.5;
 }
-button:hover {
-  --elevation: 2.5;
+
+/* Right - JSON Viewer */
+#right p {
+  --elevation: 1;
+}
+
+button#clear {
+  position: absolute;
+  display: block;
+  z-index: 999;
+  right: 2vw;
+  top: 2vw;
 }
 
 /* Toggle Visibility / Collapse Method */
@@ -71,47 +62,28 @@ form {
   grid-template-rows: min-content;
 }
 
-/* Output Column */
-body > div:nth-of-type(2) {
-  grid-area: output;
-}
-body > div:nth-of-type(2) p {
-  --elevation: 1;
-}
-
-header {
-  --elevation: 2;
-}
-
-button#clear {
-  position: absolute;
-  display: block;
-  z-index: 999;
-  right: 2vw;
-  top: 2vw;
-}
-
 /*
  * ─── JSON VIEWER MODULE ─────────────────────────────────────────────────────────
  */
-  
+
 /* Root element */
 .json-document {
   padding: 1em 2em;
 }
 
 /* Syntax highlighting for JSON objects */
-ul.json-dict, ol.json-array {
+ul.json-dict,
+ol.json-array {
   list-style-type: none;
   margin: 0 0 0 1px;
   border-left: 1px dotted #ccc;
   padding-left: 2em;
 }
 .json-string {
-  color: #0B7500;
+  color: #0b7500;
 }
 .json-literal {
-  color: #1A01CC;
+  color: #1a01cc;
   font-weight: bold;
 }
 

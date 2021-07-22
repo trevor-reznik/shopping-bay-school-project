@@ -7,7 +7,7 @@
 import { TemplateEngine, BASE_URL, ENV, renderPage } from "./index.js";
 
 function loginHandlers() {
-  const outputField = document.querySelector("body > div:nth-of-type(3)");
+  const outputField = document.querySelector("#footer");
   document.body.addEventListener("click", async (event) => {
     const target = event.target;
     if (target.tagName == "INPUT" && target.getAttribute("type") == "button") {
@@ -42,6 +42,7 @@ function loginHandlers() {
       });
     } else if (
       // Collapse and expand sections.
+      // This should be more selective -- add "off" class as selector.
       target.tagName == "DIV" &&
       target.id !== "left"
     ) {
@@ -52,20 +53,26 @@ function loginHandlers() {
 
 function loginRender() {
   document.title = "Login | Ostaa";
-  const page = new TemplateEngine("Login or Register");
-  page.updateStylesheet("./css/login.css");
+  const pageOptions = {
+    gridTemplateAreas: `"main-left main-right" "footer footer"`,
+    gridTemplateRows: "1fr minmax(min-content,40%)",
+  };
+  const page = new TemplateEngine("Login or Register", pageOptions);
+  page.css.update("./css/login.css");
 
-  // Left column.
-  page.addLeft([
-    page.loginForm("Sign In", "LOGIN", "login"),
-    page.loginForm("Sign Up", "REGISTER", "register"),
+  page.layout.addLeft([
+    page.component.loginForm("Sign In", "LOGIN", "login"),
+    page.component.loginForm("Sign Up", "REGISTER", "register"),
   ]);
 
-  // Right column.
-  page.right.innerHTML = `<h6>Ostaa</h6>`;
-
-  // Footer.
-  page.useFooter();
+  page.layout.addRight(
+    page.component.maskedtext("Ostaa", "img/1.webp", "h6", {
+      "font-size": "9rem",
+      padding: "0.5ch 0 0 0",
+      margin: "0",
+    })
+  );
+  page.layout.useFooter();
 }
 
 export { loginHandlers, loginRender };

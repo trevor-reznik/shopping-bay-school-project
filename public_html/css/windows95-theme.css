@@ -26,6 +26,7 @@
   --light: hsl(0deg, 0%, 97%);
   --primary: 0deg, 0%, 76%;
   --secondary: 240deg, 100%, 35%;
+  --secondary-darker: 240deg, 100%, 28%;
   --selected-color: var(--primary);
   /* Surface Colors */
   --bg-color: linear-gradient(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)),
@@ -56,7 +57,7 @@ body {
 }
 
 /* ─── GLOBAL SELECTOR ──────────────────────────── */
-body *:not(input[type="range"]):not(header):not(h6):not(span):not(header *):not(pre):not(pre *) {
+body *:not(input[type="range"]):not(header):not(h6):not(span):not(header *):not(pre):not(pre *):not(.custom) {
   /** Typeface **/
   -webkit-font-smoothing: antialiased;
   font-family: var(--primary-font);
@@ -129,6 +130,9 @@ input[type="text"]:hover {
 }
 input {
   --primary-font: CascadiaCode-ExtraLight;
+}
+button:hover {
+  --elevation: 2.5;
 }
 
 /* ─── TOOLBAR ───────────────────────────────── 

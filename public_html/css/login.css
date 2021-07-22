@@ -7,39 +7,22 @@
  * 
  */
 
-/* Main Grid */
 body {
-  display: grid;
-  grid:
-    "input output" 1fr
-    "footer-gallery footer-gallery" minmax(min-content, 40%)
-    / max-content 1fr;
-    height: 96vh;
-}
-body > div {
-  --elevation: 3;
+  height: 90vh;
 }
 
-/* Login / Register Forms */
-body > div:nth-of-type(1) {
-  grid-area: input;
+/* Left -- Login / Register Forms */
+#left {
   display: grid;
   grid-template-columns: max-content;
   grid-template-rows: min-content;
 }
 
-body > div:nth-of-type(1) > div {
+#left > div {
   --elevation: 5;
   cursor: pointer;
 }
-div > b {
-  --elevation: 4;
-  --primary-font: var(--shell-font);
-  --selected-color: var(--secondary);
-  filter: brightness(1.6);
-}
 
-header,
 form {
   --elevation: 2;
 }
@@ -48,6 +31,17 @@ label {
 }
 input {
   --elevation: 3.5;
+}
+
+/* Right - Title Box */
+#right {
+  text-align: center;
+}
+
+/* Footer */
+#footer {
+  --elevation: 3;
+  grid-area: footer;
 }
 
 /* Toggle Visibility / Collapse Method */
@@ -68,30 +62,4 @@ form {
   display: grid;
   grid-template-columns: repeat(2, min-content);
   grid-template-rows: min-content;
-}
-
-/* Title Box */
-#right {
-  grid-area: output;
-  text-align: center;
-}
-
-body > div:nth-of-type(2) h6 {
-    mask : url("./../img/1.webp");
-    color: hsla(0deg, 0%, 98%, .01);
-    color: white;
-    font-size: 9rem;
-    background: url("./../img/1.webp") no-repeat top left;
-    background-size: cover;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    padding: .5ch 0 0 0;
-    margin: 0;
-    font-family: font-SFAlienEncountersSolid;
-}
-
-/* Footer */
-#footer {
-    grid-area: footer-gallery;
 }

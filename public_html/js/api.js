@@ -99,26 +99,26 @@ function apiHandlers() {
 function apiRender() {
   document.title = "API Methods | Ostaa";
   const page = new TemplateEngine("Click on API methods to expand");
-  page.updateStylesheet("./css/api-methods.css");
+  page.css.update("./css/api-methods.css");
 
   // Left column.
-  page.addLeft([
-    page.loginForm("Add User", "POST"),
-    page.listingForm("Add Item", "POST"),
-    page.searchField("users"),
-    page.searchField("items"),
-    page.searchField("user listings"),
-    page.searchField("user purchases"),
+  page.layout.addLeft([
+    page.component.loginForm("Add User", "POST"),
+    page.component.listingForm("Add Item", "POST"),
+    page.component.searchField("users"),
+    page.component.searchField("items"),
+    page.component.searchField("user listings"),
+    page.component.searchField("user purchases"),
   ]);
   const boxArgs = [
     ["All Users", "GET"],
     ["All Items", "GET"],
   ];
-  const boxes = page.boxesFromArray(boxArgs);
+  const boxes = page._boxesFromArray(boxArgs);
   const inputFields = [[{ value: "Get Users" }], [{ value: "Get Items" }]];
   for (const [index, box] of Object.entries(boxes)) {
-    page.batchAppendInputs(box, inputFields[index]);
-    page.addLeft(box);
+    page._batchAppendInputs(box, inputFields[index]);
+    page.layout.addLeft(box);
   }
 
   // Right column.

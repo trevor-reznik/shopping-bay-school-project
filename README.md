@@ -10,3 +10,11 @@
 - Makeshift vanilla js rendering engine on frontend -- page layouts are dynamic
 - Makeshift CSS framework applied to all static
 - Demo of API methods on api page.
+
+```bash
+touch server-logs.txt; nohup >> server-logs.txt node . & disown;
+```
+
+```bash
+lsof -nP -iTCP -sTCP:LISTEN
+```

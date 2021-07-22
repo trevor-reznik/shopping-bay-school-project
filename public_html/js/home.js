@@ -1,33 +1,39 @@
 /**
- * Event listeners and template constructor for home page of 
+ * Event listeners and template constructor for home page of
  * ostaa shopping app pa10
  * @author Christian P. Byrne
  */
 
 import { TemplateEngine, BASE_URL } from "./index.js";
 
-function listingNode(json) {
-    console.dir(json)
-    let container = document.createElement("div");
-    let description = document.createElement("div");
-    description.classList.add("description")
-    description.innerHTML = json.description;
-    let price = document.createElement("div");
-    price.classList.add("price");
-    price.innerHTML = json.price;
-    let status = document.createElement("div");
-    status.classList.add("status");
-    status.innerHTML = json.status;
+/**
+ * 
+ * Display results from query to output container.
+ * @param {*} json 
+ * @returns 
+ */
+function listingHook(json) {
+  console.dir(json);
+  let container = document.createElement("div");
+  let description = document.createElement("div");
+  description.classList.add("description");
+  description.innerHTML = json.description;
+  let price = document.createElement("div");
+  price.classList.add("price");
+  price.innerHTML = json.price;
+  let status = document.createElement("div");
+  status.classList.add("status");
+  status.innerHTML = json.status;
 
-    let buyBtn = document.createElement("input");
-    buyBtn.type = "submit";
-    buyBtn.value = "Buy Now";
-    buyBtn.id = `buy-${json._id}`;
+  let buyBtn = document.createElement("input");
+  buyBtn.type = "submit";
+  buyBtn.value = "Buy Now";
+  buyBtn.id = `buy-${json._id}`;
 
-    for ( let node of [description, price, status, buyBtn] ) {
-        container.appendChild(node);
-    };
-    return container;
+  for (let node of [description, price, status, buyBtn]) {
+    container.appendChild(node);
+  }
+  return container;
 }
 
 function homeHandlers() {
@@ -36,9 +42,7 @@ function homeHandlers() {
     const outputNode = document.querySelector("body > div:nth-of-type(2)");
     if (target.id == "clear") {
       outputNode.innerHTML = "";
-    } else if (
-      ["my-purchases", "my-listings", "searchI"].includes(target.id)
-    ) {
+    } else if (["my-purchases", "my-listings", "searchI"].includes(target.id)) {
       let path;
       let keyword = sessionStorage.getItem("login");
       if (target.id == "my-purchases") {
@@ -53,11 +57,11 @@ function homeHandlers() {
       }
       const url = `${BASE_URL}/${path}/${keyword}`;
       $.get(url).then((response) => {
-        for ( let item of response) {
-            outputNode.appendChild(
-                // TODO: get each individual item by querying by ID
-                listingNode(item)
-            )
+        for (let item of response) {
+          outputNode.appendChild(
+            // TODO: get each individual item by querying by ID
+            listingHook(item)
+          );
         }
       });
     } else if (
@@ -76,7 +80,7 @@ function homeHandlers() {
         success: function (response) {
           $.get(`${BASE_URL}/search/${entryType}s/${mutation}`).then(
             (response) => {
-                // HANDLE RESPONSE
+              // HANDLE RESPONSE
               $("#json-viewer").jsonViewer(response);
             }
           );
@@ -85,8 +89,7 @@ function homeHandlers() {
     } else if (
       // Collapse and expand sections.
       target.tagName == "DIV" &&
-      target.id !== "left" &&
-      target.children[0].id !== "json-viewer"
+      target.id !== "left"
     ) {
       target.classList.toggle("active");
     }
@@ -95,18 +98,15 @@ function homeHandlers() {
 
 function homeRender() {
   document.title = "Home | Ostaa";
-  const page = new TemplateEngine("Shop, list, or browse");
-  page.updateStylesheet("./css/api-methods.css");
-
-  // Left column.
-  page.addLeft([
-    page.searchField("search-items"),
-    page.searchField("home listings"),
-    page.searchField("home purchases"),
-    page.listingForm("Post a Listing", "SELL"),
+  const page = new TemplateEngine("Shop | Sell");
+  page.css.update("./css/home.css");
+  page.layout.useNavbar();
+  page.layout.addLeft([
+    page.component.searchField("search-items"),
+    page.component.searchField("home listings"),
+    page.component.searchField("home purchases"),
+    page.component.listingForm("Post a Listing", "SELL"),
   ]);
-
-  // Right column.
-  page.right.innerHTML = `<button id="clear">Clear</button><pre id="json-viewer"></pre>`;
 }
+
 export { homeRender, homeHandlers };
