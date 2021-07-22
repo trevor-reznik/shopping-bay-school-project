@@ -9,7 +9,7 @@
 
 /* ─── LEFT ──────────────────────────────────────────────── */
 
-#left { 
+#left {
   display: grid;
   grid-template-columns: max-content;
   grid-template-rows: min-content;
@@ -30,6 +30,62 @@
 
 #left input {
   --elevation: 3;
+}
+
+/* ─── RESPONSIVE ITEM GRID ────────────────────────────────── */
+
+#right {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+#right .item-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#right img {
+  width: 80%;
+  padding: 0 10%;
+  height: auto;
+}
+
+#right .description {
+  font-family: CascadiaCode-Light;
+  padding: 0 1.25ch;
+}
+
+#right .bot-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20%, 40%));
+}
+
+#right input {
+  display: block;
+  --elevation: 4;
+}
+
+#right .price,
+#right .status {
+  --primary-font: CascadiaMonoPL-SemiBold;
+  --elevation:1.5;
+  width: 100%;
+  display: inline;
+  font-weight: 600;
+  text-align: center;
+}
+
+#right .status {
+  --selected-color: 328deg, 59%, 88%;
+}
+
+#right .price {
+  --selected-color: 131deg, 55%, 84%;
+}
+
+#right .price::before {
+  content: "$";
+  width: 1ch;
 }
 
 /* ───────────────────────── COLLAPSABILITY ───── */

@@ -15,9 +15,9 @@ import { loginRender, loginHandlers } from "./login.js";
 import { homeRender, homeHandlers } from "./home.js";
 
 // "api-demo" | "dev" | "production"
-const ENV = "dev";
+const ENV = "production";
 const URLS = ["http://127.0.0.1:5000", "http://143.198.57.139:80"];
-const BASE_URL = ENV === "dev" ? URLS[0] : URLS[1];
+const BASE_URL = ENV === "dev" ? URLS[0] : URLS[0];
 
 /**
  * Create the dynamic stylesheet link node that is altered
@@ -40,9 +40,9 @@ window.onload = () => {
       renderPage("home");
     }
   } else {
-    // for Production:
-    // renderPage("login");
-    renderPage("home");
+    renderPage("login");
+    // DEV:
+    // renderPage("home");
   }
 };
 
@@ -509,10 +509,16 @@ class TemplateEngine {
           id: "description",
           label: "Description",
         },
-        { type: "text", name: "image", id: "image", label: "Image" },
+        {
+          type: "file",
+          name: "image",
+          id: "image",
+          accept: "image/*",
+          label: "Image",
+        },
         { type: "number", name: "price", id: "price", label: "Price" },
         { type: "text", name: "stat", id: "stat", label: "Stat" },
-        { type: "button", value: "Submit" },
+        { type: "button", value: "Submit", id: "addListingSubmit" },
       ];
       this._batchAppendInputs(form, formFields);
       formContainer.appendChild(form);
@@ -530,26 +536,26 @@ class TemplateEngine {
         boxArgs = ["Search Users", "GET"];
         inputFields = [
           { type: "text", placeholder: "enter keyword..." },
-          { id: "searchU", value: "Search" },
+          { id: "searchUsers", value: "Search" },
         ];
       } else if (type === "search-items") {
         boxArgs = ["Search Listings", "SHOP"];
         inputFields = [
           { type: "text", placeholder: "enter keyword..." },
-          { id: "searchI", value: "Search" },
+          { id: "searchItems", value: "Search" },
         ];
       } else if (type === "items") {
         boxArgs = ["Search Items", "GET"];
         inputFields = [
           { type: "text", placeholder: "enter keyword..." },
-          { id: "searchI", value: "Search" },
+          { id: "searchItems", value: "Search" },
         ];
       } else if (type === "home purchases") {
         boxArgs = ["View Your Purchases", "PROFILE"];
-        inputFields = [{ id: "my-purchases", value: "Get Purchase History" }];
+        inputFields = [{ id: "getMyPurchases", value: "Get Purchase History" }];
       } else if (type === "home listings") {
         boxArgs = ["View Your Listings", "PROFILE"];
-        inputFields = [{ id: "my-listings", value: "Get Listings History" }];
+        inputFields = [{ id: "getMyListings", value: "Get Listings History" }];
       } else if (type === "user listings") {
         boxArgs = ["User's Listings", "GET"];
         inputFields = [

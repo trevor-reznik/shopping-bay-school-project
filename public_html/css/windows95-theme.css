@@ -57,7 +57,7 @@ body {
 }
 
 /* ─── GLOBAL SELECTOR ──────────────────────────── */
-body *:not(input[type="range"]):not(header):not(h6):not(span):not(header *):not(pre):not(pre *):not(.custom) {
+body *:not(input[type="range"]):not(header):not(h6):not(span):not(header *):not(pre):not(pre *):not(.custom):not(ul):not(ul *) {
   /** Typeface **/
   -webkit-font-smoothing: antialiased;
   font-family: var(--primary-font);

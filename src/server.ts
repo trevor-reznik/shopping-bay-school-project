@@ -7,6 +7,7 @@ import { json, urlencoded } from "body-parser";
 import { __prod__ } from "./constants";
 import express, { Request, Response } from "express";
 import cors from "cors";
+import multer from "multer";
 
 type Credentials = {
   username: string;
@@ -32,11 +33,15 @@ type User = {
 interface EbayMutations {
   create: {
     user: (credentials: Credentials) => Promise<void>;
-    item: (item: Item, username: string) => Promise<void>;
+    item: (
+      item: Item,
+      imgPath: string | null,
+      username: string
+    ) => Promise<void>;
   };
   modify: {
     user: (credentials: Credentials) => Promise<void>;
-    item: (item: Item) => Promise<void>;
+    item: any;
   };
 }
 
@@ -119,17 +124,15 @@ class EbayDatabase {
           });
           await mutation.save();
         },
-        item: async (item: Item, username: string) => {
+        item: async (item: Item, imgPath: string | null, username: string) => {
           const mutation = new this.itemModel({
             title: item.title,
             description: item.description,
             price: item.price,
+            stat: "sale",
           });
-          if (item.image) {
-            mutation.image = item.image;
-          }
-          if (item.stat) {
-            mutation.stat = item.stat;
+          if (imgPath) {
+            mutation.image = imgPath;
           }
           await mutation.save();
           const user = await this.userModel
@@ -151,8 +154,20 @@ class EbayDatabase {
             })
             .exec();
         },
-        item: async (item: Item) => {
-          await this.itemModel.updateOne(item).exec();
+        item: async (id: string, user: string) => {
+          return await this.itemModel.findOne({ _id: id }).then((item) => {
+            if (item) {
+              item.stat = "sold";
+              item.save().then(() => {
+                this.userModel.findOne({ username: user }).then((userDoc) => {
+                  if (userDoc) {
+                    userDoc.purchases.push(id);
+                    userDoc.save();
+                  }
+                });
+              });
+            }
+          });
         },
       },
     };
@@ -196,6 +211,16 @@ const ostaa = () => {
   // Constants.
   const PORT = __prod__ ? 80 : 5000;
   const IP = __prod__ ? "143.198.57.139" : "127.0.0.1";
+
+  // If security? (1) Move file on request, or (2)
+  // req.user.mayViewFilesFrom(uid, function(yes){
+  //   if (yes) {
+  //     res.sendFile('/uploads/' + uid + '/' + file);
+  //   } else {
+  //     res.send(403, 'Sorry! you cant see that.');
+  //   }
+  const IMGFOLDER = `${__dirname}/../public_html/img`;
+
   const GAP = "\n\n\n\n";
   const SPACER = (title = "section break") =>
     console.log(`${GAP}___ ${title} ___ ${GAP}`);
@@ -220,11 +245,17 @@ const ostaa = () => {
   const db = new EbayDatabase(SPACER);
 
   // 3. Initialize server and bind middleware.
+  // Image uploads.
+  const upload: multer.Multer = multer({
+    // dest: `${__dirname}/${IMGFOLDER}`,
+    dest: `${IMGFOLDER}`,
+  });
   const http = new ExpressServer();
   const middleware = [cors(), json(), urlencoded({ extended: true })];
   http.bindMiddleware(middleware);
 
   // 4. Bind routers.
+
   // TODO: routers setter method efficient?
   http.server.post("/add/user", (req: Request, res: Response) => {
     if (!__prod__) {
@@ -262,12 +293,15 @@ const ostaa = () => {
         .user(req.params.username)
         .then((value: User | null) => {
           if (value) {
+            let reference: any;
             if (req.params.collection == "listings") {
-              res.send(value.listings);
+              reference = value.listings;
+            } else if (req.params.collection == "purchases") {
+              reference = value.purchases;
             }
-            if (req.params.collection == "purchases") {
-              res.send(value.purchases);
-            }
+            db.queries.findAll.item().then((items: Item[]) => {
+              res.json(items.filter((i: Item) => reference.includes(i._id)));
+            });
           } else {
             SPACER("Cannot find user.");
             res.send("Cannot find user.");
@@ -276,17 +310,32 @@ const ostaa = () => {
     }
   );
 
-  http.server.post("/add/item/:username", (req: Request, res: Response) => {
-    db.mutations.create.item(req.body, req.params.username).then((value) => {
-      console.log("item created.");
-      if (!__prod__) {
-        SPACER("New Item Created:");
-        console.dir(req.body);
+  http.server.post(
+    "/add/item/:username",
+    upload.single("image"),
+    (req: Request, res: Response) => {
+      let path = "";
+      if (req.file) {
+        path = req.file.filename ? req.file.filename : "";
       }
-      res.end();
-    });
-  });
+      db.mutations.create
+        .item(req.body, path, req.params.username)
+        .then((value) => {
+          console.log("item created.");
+          if (!__prod__) {
+            SPACER("New Item Created:");
+            console.dir(req.body);
+          }
+          res.end();
+        });
+    }
+  );
 
+  http.server.get("/buy/:id/:user", (req, res) => {
+    db.mutations.modify
+      .item(req.params.id, req.params.user)
+      .then(console.log("item udpated"));
+  });
   http.server.get(
     "/search/:collection/:keyword",
     (req: Request, res: Response) => {
@@ -353,8 +402,8 @@ const ostaa = () => {
   });
 
   /**
-   * Response: (Boolean) true if successul login, false if user doesn't exist. 
-   * 
+   * Response: (Boolean) true if successul login, false if user doesn't exist.
+   *
    */
   http.server.post("/login", (req: Request, res: Response) => {
     db.queries.findAll.user().then((users: User[]) => {
@@ -365,8 +414,7 @@ const ostaa = () => {
       }
       let matches: User[] | null = users.filter(
         (usr) =>
-          usr.username == req.body.username &&
-          usr.password == req.body.password
+          usr.username == req.body.username && usr.password == req.body.password
       );
       if (matches.length > 0) {
         res.send(true);
