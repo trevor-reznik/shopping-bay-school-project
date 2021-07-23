@@ -4,10 +4,9 @@
  * @author Christian P. Byrne
  */
 
-import { TemplateEngine, BASE_URL, ENV, renderPage } from "./index.js";
+import { TemplateEngine, BASE_URL, ENV, renderPage } from "../index.js";
 
 function loginHandlers() {
-  const outputField = document.querySelector("#footer");
   document.body.addEventListener("click", async (event) => {
     const target = event.target;
     if (target.tagName == "INPUT" && target.getAttribute("type") == "button") {
@@ -29,9 +28,18 @@ function loginHandlers() {
             } else if (entryType == "login") {
               errorMsg = "Incorrect username-password.";
             }
-            outputField.innerHTML = errorMsg;
+            let errorNode = document.createElement("p");
+            errorNode.style.setProperty("background-image", "none")
+            errorNode.style.setProperty("background", "#f06c86")
+            errorNode.classList.toggle("vibrate")
+            errorNode.innerHTML = errorMsg;
+            setTimeout(() => { errorNode.remove()}, 1000)
+            document.querySelector("#right").appendChild(errorNode);
           } else {
             sessionStorage.setItem("login", mutation);
+            if (entryType == "register") {
+              alert("Account Created");
+            }
             if (ENV === "api-demo") {
               renderPage("api");
             } else if (ENV === "production") {
@@ -55,7 +63,7 @@ function loginRender() {
   document.title = "Login | Ostaa";
   const pageOptions = {
     gridTemplateAreas: `"main-left main-right" "footer footer"`,
-    gridTemplateRows: "1fr minmax(min-content,40%)",
+    gridTemplateRows: "1fr min-content",
   };
   const page = new TemplateEngine("Login or Register", pageOptions);
   page.css.update("./css/login.css");

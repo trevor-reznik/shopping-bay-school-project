@@ -1,0 +1,62 @@
+
+/**
+ * = Accordions
+ */
+
+.accordion .card {
+    margin-bottom: 1.5rem;
+}
+
+.accordion-panel-header {
+    display: flex;
+    -moz-justify-content: space-between;
+    -ms-justify-content: space-between;
+    justify-content: space-between;
+    -ms-flex-pack: space-between;
+    -moz-align-items: center;
+    -ms-align-items: center;
+    align-items: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.accordion-panel-header .icon {
+    color: #2A354F;
+    transition: all 0.2s ease;
+}
+
+.accordion-panel-header .icon i {
+    font-size: 0.875rem;
+}
+
+.accordion-panel-header .icon-title {
+    margin-right: 1rem;
+}
+
+.accordion-panel-header .icon-title i {
+    margin-right: 1rem;
+}
+
+.accordion-panel-header .icon-title+.icon {
+    height: 1rem;
+}
+
+.accordion-panel-header[aria-expanded="true"]>.icon {
+    transform: rotateZ(45deg);
+}
+
+.accordion-panel-header[aria-expanded="true"]>*,
+.accordion-panel-header:hover>* {
+    color: #c0c0c0;
+}
+
+.accordion-panel-header[aria-expanded="true"]>* i,
+.accordion-panel-header:hover>* i {
+    fill: #c0c0c0;
+}
+
+.accordion-panel-header:hover {
+    cursor: pointer;
+}

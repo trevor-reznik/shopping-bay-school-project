@@ -1,0 +1,35 @@
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #697992;
+    background-color: #f5f8fb;
+    box-shadow: 0 0.125rem 0.25rem rgba(42, 53, 79, 0.07);
+    border: 0.0625rem solid #eff2f5;
+}
+
+.table th,
+.table td {
+    border-top: 0;
+    font-weight: 400;
+    padding: 0.5rem 0.5rem;
+}
+
+@media (min-width: 768px) {
+    .table th,
+    .table td {
+        padding: 1rem 3rem;
+    }
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 0;
+}
+
+.table tbody+tbody {
+    border-top: 0.125rem solid #e9ecef;
+}
+
+.table.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #ffffff;
+}

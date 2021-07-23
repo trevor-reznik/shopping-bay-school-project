@@ -92,7 +92,7 @@
 
 label,
 input,
-button,
+button:not(.custom),
 form {
   display: none;
 }

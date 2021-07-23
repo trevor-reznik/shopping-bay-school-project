@@ -4,7 +4,7 @@
  * @author Christian P. Byrne
  */
 
-import { TemplateEngine, BASE_URL } from "./index.js";
+import { TemplateEngine, BASE_URL } from "./../index.js";
 
 /**
  * Binds handlers for the API Demo Page.

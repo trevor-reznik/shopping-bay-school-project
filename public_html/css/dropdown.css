@@ -1,0 +1,64 @@
+
+/**
+ * = Dropdowns
+ */
+
+.dropdown-menu {
+    min-width: 12rem;
+}
+
+.dropdown-menu .dropdown-header,
+.dropdown-menu .dropdown-item {
+    padding: .5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.dropdown-menu .dropdown-header {
+    color: #3e4555;
+    font-weight: 500;
+}
+
+.dropdown-menu .dropdown-item {
+    color: #697992;
+    transition: all 0.2s ease;
+    font-weight: 300;
+}
+
+.dropdown-menu .dropdown-itema:hover {
+    color: #3e4555;
+}
+
+.show .dropdown-menu {
+    animation: show-dropdown .2s ease forwards;
+}
+
+[data-toggle]:hover {
+    cursor: pointer;
+}
+
+.dropdown-toggle:after,
+.dropright .dropdown-toggle:after,
+.dropleft .dropdown-toggle:before,
+.dropup .dropdown-toggle:after {
+    display: none;
+}
+
+.dropdown-menu-sm {
+    min-width: 100px;
+    border: 0.3rem;
+}
+
+.dropdown-menu-md {
+    min-width: 180px;
+    border: 0.3rem;
+}
+
+.dropdown-menu-lg {
+    min-width: 260px;
+    border-radius: 0.3rem;
+}
+
+.dropdown-menu-xl {
+    min-width: 450px;
+    border-radius: 0.3rem;
+}

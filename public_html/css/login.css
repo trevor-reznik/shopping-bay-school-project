@@ -7,10 +7,6 @@
  * 
  */
 
-body {
-  height: 90vh;
-}
-
 /* Left -- Login / Register Forms */
 #left {
   display: grid;

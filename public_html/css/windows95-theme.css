@@ -13,6 +13,7 @@
  * ∥ ASSETS:
  * 		Font, Icons, and Windows95 Wallpaper from CDN: 
  * 		https://trevor-reznik.github.io/guides/windows95-css-framework/bymyself-fonts.css
+ *    https://demo.themesberg.com/windows-95-ui-kit/docs/introduction.html
  * 
  * ∥ FROM: 
  * 		Christian P. Byrne
@@ -28,6 +29,9 @@
   --secondary: 240deg, 100%, 35%;
   --secondary-darker: 240deg, 100%, 28%;
   --selected-color: var(--primary);
+  --grey: #c0c0c0;
+  --teal: #008081;
+  --blue: #000181;
   /* Surface Colors */
   --bg-color: linear-gradient(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)),
     linear-gradient(#ffffff, #ffffff);
@@ -52,12 +56,34 @@
   --text-contrast: 0deg, 0%, 7%;
 }
 
+@font-face {
+  font-family: "Windows 95";
+  src: url("../fonts/w-95-sans-serif.woff2") format("woff2"),
+    url("../fonts/w-95-sans-serif.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  box-sizing: border-box;
+}
 body {
-  background: var(--bg-color);
+  --selected-color: var(--primary);
+  background-image: linear-gradient(
+      hsla(var(--selected-color), .04),
+      hsla(var(--selected-color), .04)
+    ),
+    linear-gradient(var(--light), var(--light));
 }
 
 /* ─── GLOBAL SELECTOR ──────────────────────────── */
-body *:not(input[type="range"]):not(header):not(h6):not(span):not(header *):not(pre):not(pre *):not(.custom):not(ul):not(ul *) {
+body
+  *:not(header):not(h6):not(span):not(header *):not(pre):not(pre
+    *):not(.custom):not(footer):not(footer *):not(nav):not(nav *) {
   /** Typeface **/
   -webkit-font-smoothing: antialiased;
   font-family: var(--primary-font);
@@ -97,6 +123,47 @@ body *:not(input[type="range"]):not(header):not(h6):not(span):not(header *):not(
   transition: all 0.6s linear 0s;
 }
 
+.vibrate {
+  animation: shake 0.3s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
+
 /** Psuedo **/
 body *:hover {
   filter: brightness(calc(1 - var(--elevation) * 0.0085));
@@ -133,6 +200,37 @@ input {
 }
 button:hover {
   --elevation: 2.5;
+}
+
+button:before,
+button:after,
+input[type="button"]:after,
+input[type="button"]:before {
+  content: "";
+  position: absolute;
+  box-sizing: border-box;
+  display: block;
+  background: transparent;
+  z-index: 9;
+  top: 0;
+  left: 0;
+}
+
+input[type="button"]:before,
+button:before {
+  width: 100%;
+  height: 100%;
+  border-top: 2px solid white;
+  border-left: 2px solid white;
+  border-right: 2px solid #858585;
+  border-bottom: 2px solid #858585;
+}
+
+button:focus,
+input:focus,
+img:focus,
+.icon:focus {
+  box-shadow: none;
 }
 
 /* ─── TOOLBAR ───────────────────────────────── 
@@ -184,4 +282,86 @@ header span {
   cursor: pointer;
   height: 1.5em;
   width: 1.5em;
+}
+
+nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0;
+  margin-bottom: -2px;
+  box-sizing: border-box;
+  --elevation: 4.25;
+  font-family: "Windows 95";
+  font-size: max(min(calc(0.25em * var(--elevation)), max(2.5vw, 8px)), 1rem);
+  font-weight: min(max(calc(800 - (300 * var(--elevation))), 200), 600);
+  letter-spacing: calc(1.5px - calc(1px * (var(--elevation) / 6)));
+  color: hsla(var(--text-contrast), calc(0.6 + var(--elevation) * 0.1));
+
+  /** Borders and Outlines **/
+  outline: ridge var(--outline-color) var(--outline-width);
+  outline-offset: var(--outline-offset);
+
+  /** Shadows **/
+  --shadow: hsla(
+    0deg,
+    0%,
+    7%,
+    max(min(calc(var(--elevation) * 0.075), 0.18), 0.02)
+  );
+  --blur: max(0.5rem, min(calc(2rem / var(--elevation)), 2.5rem));
+  box-shadow: 0 0 var(--blur) var(--shadow);
+
+  /** Surface Colors **/
+  background-image: linear-gradient(
+      hsla(var(--selected-color), calc(var(--elevation) / 8)),
+      hsla(var(--selected-color), calc(var(--elevation) / 8))
+    ),
+    linear-gradient(var(--light), var(--light));
+}
+
+.navbar .time {
+  font-size: 0.65rem;
+  border-top: 1px solid #08080e;
+  border-left: 1px solid #08080e;
+  border-right: 1px solid #fcfcfc;
+  border-bottom: 1px solid #fcfcfc;
+  padding: 4px 15px;
+  margin: 6px 1px 6px 0;
+  --elevation: 5.5;
+}
+.navbar ul {
+  align-items: center;
+  flex-direction: row;
+  display: flex;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+  margin-top: 0;
+  box-sizing: border-box;
+}
+
+.navbar li {
+  font-size: 0.6rem;
+  font-weight: 300;
+  line-height: 2;
+  box-sizing: border-box;
+  letter-spacing: 0;
+  margin: 0 ;
+  padding: 4px .2px;
+}
+
+.navbar span{
+    border-top: 2px solid #FCFCFC;
+    border-left: 2px solid #FCFCFC;
+    border-bottom: 2px solid #08080E;
+    border-right: 2px solid #08080E;
+    padding: 5px;
+    margin: 0;
+
+}
+
+footer,
+footer * {
+  overflow: hidden;
 }
