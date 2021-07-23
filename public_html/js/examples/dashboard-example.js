@@ -128,9 +128,11 @@ function renderOstaa() {
       timeout: 800000,
       success: () => {
         alert("Item listed");
-        let inputs = document.querySelector("#item").querySelectorAll("input")
-        for ( const node of inputs) {
-          node.value = ""
+        let inputs = document.querySelector("#item").querySelectorAll("input");
+        for (const node of inputs) {
+          if (node.type !== "submit" && node.type !== "button") {
+            node.value = "";
+          }
         }
       },
       // If you want to add an extra field for the FormData
